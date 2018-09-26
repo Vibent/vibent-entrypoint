@@ -1,0 +1,2 @@
+# vibent-entrypoint
+
