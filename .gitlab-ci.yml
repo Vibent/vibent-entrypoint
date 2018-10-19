@@ -15,8 +15,8 @@ stages:
 
 dockerize:
   stage: dockerize
-  #only:
-  #  - master
+  only:
+    - master
   script:
     - echo $CONTAINER_IMAGE
     - docker version
@@ -30,8 +30,8 @@ dockerize:
 
 deploy:
   stage: deploy
-  #only:
-  #  - master
+  only:
+    - master
   script:
     - apk add --update curl && rm -rf /var/cache/apk/*
-    - curl -X POST -d '{"token":"#DZQ#phEGzj3C5s","restart":"vibent-entrypoint"}' admin.dev.vibent.com
+    - curl -X POST -d '{"token":"#DZQ#phEGzj3C5s","restart":"vibent-entrypoint"}' https://admin.dev.vibent.com

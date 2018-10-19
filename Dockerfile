@@ -1,6 +1,7 @@
 FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY confs/ /etc/nginx/confs
+COPY conf/ /etc/nginx/conf
+COPY certificates/ /etc/nginx/certificates
 
 WORKDIR /usr/share/nginx/html
