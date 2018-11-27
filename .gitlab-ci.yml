@@ -1,37 +1,35 @@
 image: docker:latest
 services:
-  - docker:18.06.0-dind
+- docker:18.06.0-dind
 
 variables:
+  VERSION: 1.0.0
   DOCKER_DRIVER: overlay
-  SPRING_PROFILES_ACTIVE: gitlab-ci
   CONTAINER_URL: registry.gitlab.com
   CONTAINER_PATH: /vibent/vibent-entrypoint
   CONTAINER_IMAGE: ${CONTAINER_URL}${CONTAINER_PATH}
 
 stages:
-  - dockerize
-  - deploy
+- dockerize
+- deploy
 
 dockerize:
   stage: dockerize
   only:
-    - master
+  - develop
+  when: manual
+  allow_failure: false
   script:
-    - echo $CONTAINER_IMAGE
-    - docker version
-    - docker build -t $CONTAINER_URL .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CONTAINER_URL
-    - docker images
-    - docker pull $CONTAINER_IMAGE:latest || true
-    - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest .
-    - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
-    - docker push $CONTAINER_IMAGE:latest
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CONTAINER_URL
+  - docker pull $CONTAINER_IMAGE:latest || true
+  - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$VERSION --tag $CONTAINER_IMAGE:latest .
+  - docker push $CONTAINER_IMAGE:$VERSION
+  - docker push $CONTAINER_IMAGE:latest
 
 deploy:
   stage: deploy
   only:
-    - master
+  - develop
   script:
-    - apk add --update curl && rm -rf /var/cache/apk/*
-    - curl -X POST -d '{"token":"#DZQ#phEGzj3C5s","restart":"vibent-entrypoint"}' https://admin.dev.vibent.com
+  - apk add --update curl && rm -rf /var/cache/apk/*
+  - curl -X POST -d '{"token":"$AWS_UTIL_TOKEN","restart":"vibent-entrypoint"}' https://admin.dev.vibent.com
