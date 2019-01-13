@@ -32,4 +32,4 @@ deploy:
   - develop
   script:
   - apk add --update curl && rm -rf /var/cache/apk/*
-  - curl -X POST -d "{\"token\":\"$AWS_UTIL_TOKEN\",\"restart\":\"vibent-entrypoint\"}" https://admin.dev.vibent.com
+  - curl -X POST -d "{\"token\":\"$AWS_UTIL_TOKEN\",\"restart\":\"vibent-entrypoint\"}" https://admin.vibent.com
