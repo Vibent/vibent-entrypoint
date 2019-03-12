@@ -15,9 +15,9 @@ stages:
 
 dockerize:
   stage: dockerize
-  #only:
-  #- develop
-  #when: manual
+  only:
+  - develop
+  when: manual
   allow_failure: false
   script:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CONTAINER_URL
@@ -28,8 +28,8 @@ dockerize:
 
 deploy:
   stage: deploy
-  #only:
-  #- develop
+  only:
+  - develop
   script:
   - apk add --update curl && rm -rf /var/cache/apk/*
   - curl -X POST -d "{\"token\":\"$AWS_UTIL_TOKEN\",\"restart\":\"vibent-entrypoint\"}" https://admin.vibent.com
